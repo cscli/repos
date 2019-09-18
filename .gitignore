@@ -1,0 +1,17 @@
+/Debug/
+/\.vs/
+
+*.exe
+*.ilk
+*.pdb
+*.vcxproj
+*.filters
+*.user
+*.log
+*.tlog
+*.ipch
+*.lastbuildstate
+*.db
+*.idb
+*.txt
+
