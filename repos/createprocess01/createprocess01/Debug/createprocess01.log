@@ -1,3 +1,0 @@
-﻿  createprocess01.cpp
-C:\Users\k32\source\repos\createprocess01\createprocess01\createprocess01.cpp(9,1): warning C4326:  “main”的返回类型应为“int”而非“void”
-  createprocess01.vcxproj -> C:\Users\k32\source\repos\createprocess01\Debug\createprocess01.exe
