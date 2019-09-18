@@ -5,6 +5,54 @@
 #include <Tlhelp32.h>
 #include <shlwapi.h>
 
+/* **********************************************************************
+ * BOOL GetDiskSpaceInfo(LPCSTR pszDrive)
+ * 功能：根据输入的驱动器，获取磁盘总容量、空闲空间、簇数量等磁盘信息
+ * 参数：驱动器根路径，比如：“D:\”
+ ***********************************************************************/
+BOOL GetDiskSpaceInfo(LPCSTR pszDrive)
+{
+	DWORD64 qwFreeBytesToCaller, qwTotalBytes, qwFreeBytes;
+	DWORD dwSectPerClust, dwBytesPerSect, dwFreeClusters, dwTotalClusters;
+	BOOL bResult;
+
+	printf("%s\n", pszDrive);
+
+	//使用GetDiskFreeSpaceEx获取磁盘信息并打印结果
+	bResult = GetDiskFreeSpaceExA(
+		pszDrive,
+		(PULARGE_INTEGER)& qwFreeBytesToCaller,
+		(PULARGE_INTEGER)& qwTotalBytes,
+		(PULARGE_INTEGER)& qwFreeBytes
+	);
+	if (bResult)
+	{
+		printf("使用GetDiskFreeSpaceEx获取磁盘空间信息\n");
+		printf("可获得的空闲空间（字节）：\t%I64d\n", qwFreeBytesToCaller);
+		printf("空闲空间（字节）：\t\t%I64d\n", qwFreeBytes);
+		printf("磁盘总容量（字节）：\t\t%I64d\n", qwTotalBytes);
+	}
+	//使用GetDiskFreeSpace获取磁盘信息并打印结果
+	bResult = GetDiskFreeSpaceA(
+		pszDrive,
+		&dwSectPerClust,
+		&dwBytesPerSect,
+		&dwFreeClusters,
+		&dwTotalClusters
+	);
+	if (bResult)
+	{
+		printf("\n使用GetDiskFreeSpace获取磁盘空间信息\n");
+		printf("空闲的簇数量：\t\t%d\n", dwFreeClusters);
+		printf("总簇数量：\t\t%d\n", dwTotalClusters);
+		printf("每簇的扇区数量：\t%d\n", dwSectPerClust);
+		printf("每扇区的容量（字节）：\t%d\n", dwBytesPerSect);
+		printf("空闲空间（字节）：\t%I64d\n", (DWORD64)dwFreeClusters * (DWORD64)dwSectPerClust * (DWORD64)dwBytesPerSect);
+		printf("磁盘总容量（字节）：\t%I64d\n", (DWORD64)dwTotalClusters * (DWORD64)dwSectPerClust * (DWORD64)dwBytesPerSect);
+	}
+	return bResult;
+}
+
 BOOL IsExistProcess(WCHAR* szProcessName)  //TCHAR 在使用多字节编码时被定义成char，在Unicode编码时定义成wchar_t
 {
 	printf("processname wcslen=%d\n", wcslen(szProcessName));
@@ -32,6 +80,7 @@ BOOL IsExistProcess(WCHAR* szProcessName)  //TCHAR 在使用多字节编码时�
 }
 int main()
 {
+	setlocale(LC_CTYPE, "chs");   // 添加了此行，printf("%ls") 能正常输出汉字了
 	std::cout << "Hello World!\n";
 	WCHAR w_str[128] = L"360主动防御.exe";
 	printf("w_str = %ls\n", w_str);
@@ -42,6 +91,7 @@ int main()
 		printf("存在\n");
 	else
 		printf("no\n");
+	//GetDiskSpaceInfo("c:");
 	return 0;
 
 
