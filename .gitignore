@@ -14,4 +14,6 @@
 *.db
 *.idb
 *.txt
-
+*.obj
+*.opendb
+*.suo
